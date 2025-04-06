@@ -1,0 +1,5 @@
+{
+    "openai_model": "gpt-4o",
+    "data_source": "/dataset/Thyroid_Diff.csv"
+
+}

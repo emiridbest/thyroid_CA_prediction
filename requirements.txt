@@ -1,0 +1,11 @@
+requests
+streamlit
+python-dotenv
+openai
+yfinance
+pandas
+matplotlib
+scikit-learn
+tensorflow
+numpy
+keras
