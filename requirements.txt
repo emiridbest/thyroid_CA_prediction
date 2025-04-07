@@ -2,10 +2,9 @@ requests
 streamlit
 python-dotenv
 openai
-yfinance
+imbalanced-learn
 pandas
 matplotlib
 scikit-learn
-tensorflow
 numpy
-keras
+seaborn

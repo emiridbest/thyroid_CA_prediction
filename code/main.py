@@ -53,10 +53,8 @@ def generate_patient_analysis(patient_data: pd.DataFrame, prediction:str) -> str
         raise Exception(f"AI analysis failed: {str(e)}")
 
 def fetch_patient_data(**patient_params) -> pd.DataFrame:
-    """Fetch historical patient data."""
     """Create DataFrame from patient parameters."""
     try:
-        # Convert to DataFrame
         patient_data = pd.DataFrame([patient_params])
     except Exception as e:
         raise Exception(f"Data preparation failed: {str(e)}")
@@ -69,7 +67,7 @@ def get_recurrence_predictions(data):
     try:
         # Fetch data
         data = prepare_data(data)
-        data = data.drop(["Hx Radiothreapy", "Hx Smoking"], axis=1)
+        data = data.drop(["Recurred","Hx Radiothreapy", "Hx Smoking"], axis=1)
         
         # Train model and make predictions
         model, scores = train_sk_model()  # Unpack all two values
@@ -83,25 +81,7 @@ def get_recurrence_predictions(data):
         return None, None
 
 def main():
-    patient_params = {
-    "Age": Age,
-    "Gender": Gender,
-    "Smoking": Smoking,
-    "Hx Smoking": Hx_Smoking,
-    "Hx Radiothreapy": Hx_Radiothreapy,
-    "Thyroid Function": Thyroid_Function,
-    "Physical Examination": Physical_Examination,
-    "Adenopathy": Adenopathy,
-    "Pathology": Pathology,
-    "Focality": Focality,
-    "Risk": Risk,
-    "T": T,
-    "N": N,
-    "M": M,
-    "Stage": Stage,
-    "Response": Response
-    } 
-    data = fetch_patient_data(**patient_params)
+
     st.title("Thyroid Recurrence Risk Analysis")
     st.sidebar.title("Patient Input")
     # Patient input fields
@@ -116,12 +96,12 @@ def main():
                 index=0  # Default to "M"
             )
             Smoking = st.selectbox(
-                "Smoking Status:",
+                "Smoking Actively:",
                 options=["No", "Yes"], 
                 index=0 
             )
             Hx_Smoking = st.selectbox(
-                "Hx Smoking Status:",
+                "Smoked in Past:",
                 options=["No", "Yes"], 
                 index=0 
             )
@@ -163,17 +143,17 @@ def main():
                 index=0  
             )
             T = st.selectbox(
-                "T:",
+                "Tumor Size:",
                 options=["T1", "T2", "T3", "T4"], 
                 index=0  
             )
             N = st.selectbox(
-                "N:",
+                "Lymph Node Involvement:",
                 options=["N0", "N1a", "N1b"], 
                 index=0  
             )
             M = st.selectbox(
-                "M:",
+                "Distant Metastasis:",
                 options=["M0", "M1"], 
                 index=0  
             )
@@ -187,10 +167,27 @@ def main():
                 options=["Excellent", "Indeterminate", "Biochemical Incomplete", "Structural Incomplete"], 
                 index=0  
             )
-        data = fetch_patient_data(Age, Gender, Smoking, Hx_Smoking,
-                       Hx_Radiothreapy, Thyroid_Function, Physical_Examination,
-                        Adenopathy, Pathology, Focality, Risk, T, N,
-                        M, Stage, Response)
+        patient_params = {
+            "Age": Age,
+            "Gender": Gender,
+            "Smoking": Smoking,
+            "Hx Smoking": Hx_Smoking,
+            "Hx Radiothreapy": Hx_Radiothreapy,
+            "Thyroid Function": Thyroid_Function,
+            "Physical Examination": Physical_Examination,
+            "Adenopathy": Adenopathy,
+            "Pathology": Pathology,
+            "Focality": Focality,
+            "Risk": Risk,
+            "T": T,
+            "N": N,
+            "M": M,
+            "Stage": Stage,
+            "Response": Response,
+            "Recurred": 1
+            } 
+        data = fetch_patient_data(**patient_params)
+ 
         # Submit button
         if st.sidebar.button("Predict", key="Predict"):
             # Get predictions
@@ -199,7 +196,11 @@ def main():
                 st.success(f"Predicted Recurrence Risk: **{predictions}**")
                 
                 with st.expander("Model Performance Metrics", expanded=False):
-                    st.write(f"Model Accuracy: {scores['accuracy']:.2f}")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Training Accuracy", f"{(scores[0]*100):.2f}%")
+                    with col2:
+                        st.metric("Testing Accuracy", f"{(scores[1]*100):.2f}%")
                 
                 # Generate AI analysis
                 with st.spinner("Generating clinical analysis..."):
@@ -218,9 +219,16 @@ def main():
     # Footer
     st.sidebar.markdown(
         """
-        ---
         ### About
         This app provides a detailed analysis of thyroid cancer recurrence risk based on patient data.
+        
+        ### Disclaimer
+        This app is for educational purposes only and should not be used as a substitute for professional medical advice.
+        
+        Always consult a healthcare provider for medical concerns.
+       
+        ### Contact
+        [Emiri Udogwu](https://www.linkedin.com/in/emiridbest/)
         """
     )
 

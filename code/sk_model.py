@@ -2,14 +2,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.naive_bayes import GaussianNB, CategoricalNB
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import  accuracy_score
 from imblearn.over_sampling import SMOTE
 
 def prepare_data(data):
@@ -62,13 +60,13 @@ def train_sk_model():
         # Apply SMOTE
         os = SMOTE(random_state=0)
         X, y = os.fit_resample(X, y)
-        # Split data into train and test sets
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)        
         # Use RandomForest for more stable predictions
-        model = RandomForestClassifier(n_estimators=100, random_state=42)
- 
+        rf = RandomForestClassifier(n_estimators=100, random_state=42)
+         # Split data into train and test sets
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
         # Fit the model
+        model = rf.fit(X_train, y_train)
+
         y_train_pred = model.predict(X_train)
         y_test_pred = model.predict(X_test)
         
