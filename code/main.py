@@ -184,7 +184,7 @@ def main():
             "M": M,
             "Stage": Stage,
             "Response": Response,
-            "Recurred": 1
+            "Recurred": 0
             } 
         data = fetch_patient_data(**patient_params)
  
