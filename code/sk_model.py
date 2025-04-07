@@ -15,7 +15,6 @@ def prepare_data(data):
     try:
         
         
-        data["Gender"] = data["Gender"].replace({"F": 0, "M": 1})
         data["T"] = data["T"].replace({"T1a": 0, "T1b": 1, "T2": 2, "T3a": 3, "T3b": 4, "T4a": 5, "T4b": 6})
         data["Thyroid Function"] = data["Thyroid Function"].replace({"Euthyroid": 0, "Subclinical Hypothyroidism": 1, "Clinical Hypothyroidism": 2, "Subclinical Hyperthyroidism": 3, "Clinical Hyperthyroidism": 4})
         data["N"] = data["N"].replace({"N0": 0, "N1a": 1, "N1b": 2})
@@ -26,10 +25,6 @@ def prepare_data(data):
         data["Adenopathy"] = data["Adenopathy"].replace({"No": 0, "Right": 1, "Left": 2, "Posterior": 3, "Bilateral": 4, "Extensive": 5 })
         data["Recurred"] = data["Recurred"].replace({"No": 0, "Yes": 1})
         data["Stage"] = data["Stage"].replace({"I": 0, "II": 1, "III": 2, "IVA": 3, "IVB": 4})
-        data["Hx Smoking"] = data["Hx Smoking"].replace({"No": 0, "Yes": 1})
-        data["Smoking"] = data["Smoking"].replace({"No": 0, "Yes": 1})
-        data["Hx Radiothreapy"] = data["Hx Radiothreapy"].replace({"No": 0, "Yes": 1})
-        data["M"] = data["M"].replace({"M0": 0, "M1": 1})
         data["Focality"] = data["Focality"].replace({"Uni-Focal": 0, "Multi-Focal": 1})
 
         # Encode categorical columns
