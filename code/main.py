@@ -20,21 +20,21 @@ model, model_scores = load_model()
 
 
 def generate_patient_analysis(patient_data: pd.DataFrame, prediction:str) -> str:
-    """Advise based on inputs and recurrence risk for patients using OpenAI."""
+    """Advise doctors/clinicians based on inputs and recurrence risk for patients using OpenAI."""
     try:
 
         prompt = f"""
-        Analyze patient profile from records and provide a detailed analysis of the patient risk of thyroid cancer recurrence {prediction}.
+        Analyze patient profile from records and provide a detailed analysis of the patient risk of thyroid cancer.
         The patient has the following characteristics:
-        {patient_data.to_dict(orient='records')}
-        The analysis should include:
+        {patient_data[0:17].to_dict(orient='records')}, recurrence: {prediction}.
+        The analysis should include :
         - Potential recurrence risk
         - Recommended treatment options
         - Lifestyle changes
         - Follow-up care
         - Prognosis
         - Any other relevant information
-        Please provide a detailed response.
+        Please provide a detailed response to a doctor/clinician.
         The analysis should be based on the latest medical guidelines and research.
         The analysis should be clear and concise, suitable for a medical professional.
         The analysis should be based on the latest medical guidelines and research.
@@ -73,7 +73,7 @@ def get_recurrence_predictions(data):
         model, scores = train_sk_model()  # Unpack all two values
         predictions = model.predict(data)
         # Convert predictions to human-readable format
-        predictions = ["Low Risk", "High Risk"][predictions[0]]
+        predictions = ["Unlikely", "Very Likely"][predictions[0]]
         
         return predictions, scores
     except Exception as e:
@@ -184,7 +184,7 @@ def main():
             "M": M,
             "Stage": Stage,
             "Response": Response,
-            "Recurred": 1
+            "Recurred": None
             } 
         data = fetch_patient_data(**patient_params)
  
